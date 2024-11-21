@@ -6,12 +6,14 @@ import 'moment/locale/pt-br'
 import commonStyles from "../commonStyles";
 import Task from "../components/Task";
 import Icon from 'react-native-vector-icons/FontAwesome'
+import AddTask from "./AddTask";
 
 export default class TaskList extends Component {
 
     state = {
         showDoneTasks: true,
         visibleTasks: [],
+        showAddTask: true,
         tasks: [{
             id: Math.random(),
             desc: 'Comprar Algo',
@@ -35,9 +37,9 @@ export default class TaskList extends Component {
 
     filterTasks = () => {
         let visibleTasks = null
-        if(this.state.showDoneTasks) {
+        if (this.state.showDoneTasks) {
             visibleTasks = [...this.state.tasks]
-        }else{
+        } else {
             const pending = task => task.doneAt === null
             visibleTasks = this.state.tasks.filter(pending)
         }
@@ -48,12 +50,12 @@ export default class TaskList extends Component {
     toggleTask = taskId => {
         const tasks = [...this.state.tasks]
         tasks.forEach(task => {
-            if(task.id === taskId){
+            if (task.id === taskId) {
                 task.doneAt = task.doneAt ? null : new Date()
             }
         })
 
-        this.setState({ tasks })
+        this.setState({ tasks }, this.filterTasks)
     }
 
     render() {
@@ -61,6 +63,8 @@ export default class TaskList extends Component {
         const today = moment().locale('pt-br').format('ddd, D, [de] MMMM')
         return (
             <View style={styles.container}>
+                <AddTask isVisible={this.state.showAddTask}
+                    onCancel={() => this.setState({ showAddTask: false })} />
                 <ImageBackground source={todayImage} style={styles.backgroud}>
                     <View style={styles.iconbar}>
                         <TouchableOpacity onPress={this.toggleFilter}>
