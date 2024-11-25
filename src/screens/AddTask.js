@@ -1,12 +1,27 @@
 import Raeact, { Component } from "react";
-import { View, 
-    Modal, 
-    StyleSheet, 
-    TouchableWithoutFeedback, 
-    Text, TouchableOpacity, TextInput } from "react-native";
+import {
+    View,
+    Modal,
+    StyleSheet,
+    TouchableWithoutFeedback,
+    Text, TouchableOpacity, TextInput
+} from "react-native";
 import commonStyles from "../commonStyles";
+import DateTimePicker from '@react-native-community/datetimepicker'
+
+const initialState = { desc: '', date: new Date() }
 
 export default class AddTask extends Component {
+
+    state = {
+        ...initialState
+    }
+
+    getDatePicker = () => {
+        return <DateTimePicker  
+        value={this.state.date}
+        onChange={(_, date) => this.setState({ date })}/>
+    }
 
     render() {
         return (
@@ -20,20 +35,23 @@ export default class AddTask extends Component {
                 </TouchableWithoutFeedback>
                 <View style={styles.container}>
                     <Text style={styles.header}>Nova Tarefa</Text>
-                    <TextInput style={styles.input}/>
+                    <TextInput style={styles.input}
+                        placeholder="Informe a descrição"
+                        onChangeText={desc => this.setState({ desc })}
+                        value={this.state.desc} />
                     <View style={styles.buttons}>
-                        <TouchableOpacity>
-                                <Text style={styles.button}>Cancelar</Text>
+                        <TouchableOpacity onPress={this.props.onCancel}>
+                            <Text style={styles.button}>Cancelar</Text>
                         </TouchableOpacity>
                         <TouchableOpacity>
-                                <Text style={styles.button}>Salvar</Text>
+                            <Text style={styles.button}>Salvar</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
                 <TouchableWithoutFeedback
                     onPress={this.props.onCancel}>
                     <View style={styles.background}>
-                         
+
                     </View>
                 </TouchableWithoutFeedback>
             </Modal>
@@ -47,7 +65,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.7)'
     },
     container: {
-        flex: 1,
         backgroundColor: '#FFF',
     },
     header: {
