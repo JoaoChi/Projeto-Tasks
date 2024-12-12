@@ -4,6 +4,8 @@
         "Nova Tarefa": "Nova Tarefa",
         "Informe a descrição": "Informe a descrição",
         "Cancelar": "cancelar",
-        "Salvar": "Salvar"
+        "Salvar": "Salvar",
+        "Dados Inválidos!": "Dados Inválidos!",
+        "Descrição não informada!": "Descrição não informada!"
     }
 }

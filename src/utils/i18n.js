@@ -7,7 +7,7 @@ import es from "./es.json"
 
 i18n.use(initReactI18next).init({
     compatibilityJSON: 'v3',
-    lng: 'pt',
+    lng: 'es',
     resources: {
         en: en,
         pt: pt,
@@ -21,4 +21,4 @@ i18n.use(initReactI18next).init({
     }
 })
 
-export default i18n;
+export default withTranslation()(t, i18n);

@@ -4,6 +4,8 @@
         "Nova Tarefa": "Nueva tarea",
         "Informe a descrição": "Introduce la descripción",
         "Cancelar": "Cancelar",
-        "Salvar": "Ahorrar"
+        "Salvar": "Ahorrar",
+        "Dados Inválidos!": "¡Datos no válidos!",
+        "Descrição não informada!": "¡Descripción no proporcionada!"
     }
 }

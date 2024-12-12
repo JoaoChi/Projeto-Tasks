@@ -17,6 +17,8 @@ import Task from "../components/Task";
 import Icon from 'react-native-vector-icons/FontAwesome'
 import AddTask from "./AddTask";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { withTranslation } from "react-i18next";
+import "../utils/i18n";
 
 const initialState = {
     showDoneTasks: true,
@@ -25,8 +27,7 @@ const initialState = {
     tasks: []
 }
 
-
-export default class TaskList extends Component {
+class TaskList extends Component {
 
     state = {
        ...initialState
@@ -69,7 +70,7 @@ export default class TaskList extends Component {
 
     addTask = newTask => {
         if (!newTask.desc || !newTask.desc.trim()) {
-            Alert.alert('Dados Inválidos!', 'Descrição não informada!')
+            Alert.alert(this.props.t('Dados Inválidos!'), this.props.t('Descrição não informada!'))
             return
         }
 
@@ -91,6 +92,7 @@ export default class TaskList extends Component {
 
     render() {
 
+        const { t } = this.props;
         const today = moment().locale('pt-br').format('ddd, D, [de] MMMM')
         return (
             <View style={styles.container}>
@@ -106,7 +108,7 @@ export default class TaskList extends Component {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.titleBar}>
-                        <Text style={styles.title}>Hoje</Text>
+                        <Text style={styles.title}>{this.props.t('Hoje')}</Text>
                         <Text style={styles.subtitle}>{today}</Text>
                     </View>
                 </ImageBackground>
@@ -174,3 +176,5 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     }
 })
+
+export default withTranslation()(TaskList);

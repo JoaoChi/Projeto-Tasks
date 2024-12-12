@@ -1,4 +1,4 @@
-import Raeact, { Component } from "react";
+import React, { Component } from "react";
 import {
     View,
     Modal,
@@ -10,10 +10,12 @@ import {
 import commonStyles from "../commonStyles";
 import DateTimePicker from '@react-native-community/datetimepicker'
 import moment from "moment";
+import "../utils/i18n";
+import { withTranslation } from "react-i18next";
 
 const initialState = { desc: '', date: new Date(), showDatePicker: false }
 
-export default class AddTask extends Component {
+class AddTask extends Component {
 
     state = {
         ...initialState
@@ -51,7 +53,11 @@ export default class AddTask extends Component {
         return datePicker
     }
 
+
     render() {
+
+        const { t } = this.props;
+
         return (
             <Modal transparent={true} visible={this.props.isVisible}
                 onRequestClose={this.props.onCancel}
@@ -62,18 +68,24 @@ export default class AddTask extends Component {
                     </View>
                 </TouchableWithoutFeedback>
                 <View style={styles.container}>
-                    <Text style={styles.header}>Nova Tarefa</Text>
+                    <Text style={styles.header}>
+                        {this.props.t('Nova Tarefa')}
+                    </Text>
                     <TextInput style={styles.input}
-                        placeholder="Informe a descrição"
+                        placeholder={this.props.t('Informe a descrição')}
                         onChangeText={desc => this.setState({ desc })}
                         value={this.state.desc} />
                     {this.getDatePicker()}
                     <View style={styles.buttons}>
                         <TouchableOpacity onPress={this.props.onCancel}>
-                            <Text style={styles.button}>Cancelar</Text>
+                            <Text style={styles.button}>
+                                {this.props.t('Cancelar')}
+                                </Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={this.save}>
-                            <Text style={styles.button}>Salvar</Text>
+                            <Text style={styles.button}>
+                                {this.props.t('Salvar')}
+                            </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -129,3 +141,5 @@ const styles = StyleSheet.create({
         marginLeft: 15
     }
 })
+
+export default withTranslation()(AddTask);

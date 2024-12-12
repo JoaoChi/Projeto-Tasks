@@ -4,6 +4,8 @@
         "Nova Tarefa": "New Task",
         "Informe a descrição": "Enter the description",
         "Cancelar": "Cancel",
-        "Salvar": "Save"
+        "Salvar": "Save",
+        "Dados Inválidos!": "Invalid data!",
+        "Descrição não informada!": "Description not provided!"
     }
 }
