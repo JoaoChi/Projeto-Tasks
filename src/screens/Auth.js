@@ -4,7 +4,7 @@ import { ImageBackground, Text, StyleSheet, View, TextInput, TouchableOpacity, P
 import AuthInput from "../components/AuthInput";
 import commonStyles from "../commonStyles";
 import backgroundImage from "../../assets/imgs/login.jpg"
-import {server, showError, showSucess} from "../common";
+import { server, showError, showSucess } from "../common";
 import axios from "axios";
 
 const initialState = {
@@ -25,7 +25,7 @@ export default class Auth extends Component {
         if (this.state.stageNew) {
             this.signup()
         } else {
-            Alert.alert('Sucesso!', 'Login')
+            this.signin()
         }
     }
 
@@ -40,12 +40,38 @@ export default class Auth extends Component {
 
             showSucess('Usuário Cadastrado')
             this.setState({ ...initialState })
-        } catch(e){
+        } catch (e) {
+            showError(e)
+        }
+    }
+
+    signin = async () => {
+        try {
+            const res = await axios.post(`${server}/signin`, {
+                email: this.state.email,
+                password: this.state.password,
+            })
+
+            axios.defaults.headers.common['Authorization'] = `bearer ${res.data.token}`
+            this.props.navigation.navigate('Home')
+        } catch (e) {
             showError(e)
         }
     }
 
     render() {
+        const validations = []
+        validations.push(this.state.email && this.state.email.includes('@'))
+        validations.push(this.state.password && this.state.password.length >= 6)
+
+        if (this.state.stageNew) {
+            validations.push(this.state.name && this.state.name.trim().length >= 3)
+            validations.push(this.state.confirmPassword)
+            validations.push(this.state.confirmPassword === this.state.password)
+        }
+
+        const validForm = validations.reduce((t, a) => t && a)
+
         return (
             <ImageBackground source={backgroundImage} style={styles.background}>
                 <Text style={styles.title}>Tasks</Text>
@@ -64,8 +90,9 @@ export default class Auth extends Component {
                     {this.state.stageNew &&
                         <AuthInput icon='asterisk' placeholder="Confirme a senha" value={this.state.confirmPassword}
                             style={styles.input} onChangeText={confirmPassword => this.setState({ confirmPassword })} />}
-                    <TouchableOpacity onPress={this.signinOrsignup}>
-                        <View style={styles.button}>
+                    <TouchableOpacity onPress={this.signinOrsignup}
+                        disabled={!validForm}>
+                        <View style={[styles.button, validForm ? {} : { backgroundColor: '#AAA' }]}>
                             <Text style={styles.buttonText}>
                                 {this.state.stageNew ? 'Registrar' : 'Entrar'}
                             </Text>
@@ -75,9 +102,9 @@ export default class Auth extends Component {
                 <TouchableOpacity style={{ padding: 10 }}
                     onPress={
                         () => this.setState({ stageNew: !this.state.stageNew })}>
-                            <Text style={styles.buttonText}>
-                            {this.state.stageNew ? 'Já possui conta?' : 'Ainda não possui conta?'}
-                            </Text>
+                    <Text style={styles.buttonText}>
+                        {this.state.stageNew ? 'Já possui conta?' : 'Ainda não possui conta?'}
+                    </Text>
                 </TouchableOpacity>
             </ImageBackground>
         )

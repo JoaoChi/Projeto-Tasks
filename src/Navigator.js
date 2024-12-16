@@ -1,22 +1,18 @@
-import React from "react";
-import { createAppContainer, createSwitchNavigator } from "react-navigation";
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Auth from './src/screens/Auth'; 
+import Home from './src/screens/Home';
 
-import TaskList from "./screens/TaskList";
-import Auth from "./screens/Auth";
+const Stack = createStackNavigator();
 
-const mainRoutes = {
-    Auth: {
-        name: 'Auth',
-        screen: Auth
-    },
-    Home: {
-        name: 'home',
-        screen: TaskList
-    }
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Auth">
+        <Stack.Screen name="Auth" component={Auth} />
+        <Stack.Screen name="Home" component={Home} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }
-
-const mainNavigator = createSwitchNavigator(mainRoutes, {
-    initialRouteName: 'Auth'
-})
-
-export default createAppContainer(mainNavigator)
