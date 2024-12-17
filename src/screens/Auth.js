@@ -45,7 +45,7 @@ export default class Auth extends Component {
         }
     }
 
-    signin = async () => {
+    signin = async () => {   
         try {
             const res = await axios.post(`${server}/signin`, {
                 email: this.state.email,
