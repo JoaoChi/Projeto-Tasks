@@ -1,21 +1,23 @@
-import React, { Component } from "react";
+import React, { Component } from 'react'
 import {
-    View,
-    Modal,
-    StyleSheet,
-    TouchableWithoutFeedback,
-    Text, TouchableOpacity, TextInput,
     Platform,
-} from "react-native";
-import commonStyles from "../commonStyles";
+    Modal,
+    View,
+    Text,
+    TouchableOpacity,
+    TextInput,
+    StyleSheet,
+    TouchableWithoutFeedback
+} from 'react-native'
+
+import moment from 'moment'
 import DateTimePicker from '@react-native-community/datetimepicker'
-import moment from "moment";
-import "../utils/i18n";
-import { withTranslation } from "react-i18next";
+
+import commonStyles from '../commonStyles'
 
 const initialState = { desc: '', date: new Date(), showDatePicker: false }
 
-class AddTask extends Component {
+export default class AddTask extends Component {
 
     state = {
         ...initialState
@@ -24,7 +26,7 @@ class AddTask extends Component {
     save = () => {
         const newTask = {
             desc: this.state.desc,
-            date: this.state.date,
+            date: this.state.date
         }
 
         this.props.onSave && this.props.onSave(newTask)
@@ -32,13 +34,20 @@ class AddTask extends Component {
     }
 
     getDatePicker = () => {
-        let datePicker = <DateTimePicker
+        let datePicker = (
+          <DateTimePicker
+            mode="date"
             value={this.state.date}
-            onChange={(_, date) => this.setState({ date, showDatePicker: false })}
-            mode="date" />
-
+            onChange={(_, date) => {
+              date = date ? date : new Date()
+              this.setState({date, showDatePicker: false})
+            }}
+          />
+        )
+        
         const dateString = moment(this.state.date).format('ddd, D [de] MMMM [de] YYYY')
-        if (Platform.OS === 'android') {
+
+        if(Platform.OS === 'android') {
             datePicker = (
                 <View>
                     <TouchableOpacity onPress={() => this.setState({ showDatePicker: true })}>
@@ -50,50 +59,38 @@ class AddTask extends Component {
                 </View>
             )
         }
+        
         return datePicker
     }
 
-
     render() {
-
-        const { t } = this.props;
-
         return (
             <Modal transparent={true} visible={this.props.isVisible}
                 onRequestClose={this.props.onCancel}
-                animationType="slide">
+                animationType='slide'>
                 <TouchableWithoutFeedback
                     onPress={this.props.onCancel}>
-                    <View style={styles.background}>
-                    </View>
+                    <View style={styles.background}></View>
                 </TouchableWithoutFeedback>
                 <View style={styles.container}>
-                    <Text style={styles.header}>
-                        {this.props.t('Nova Tarefa')}
-                    </Text>
-                    <TextInput style={styles.input}
-                        placeholder={this.props.t('Informe a descrição')}
+                    <Text style={styles.header}>Nova Tarefa</Text>
+                    <TextInput style={styles.input} 
+                        placeholder="Informe a Descrição..."
                         onChangeText={desc => this.setState({ desc })}
                         value={this.state.desc} />
                     {this.getDatePicker()}
                     <View style={styles.buttons}>
                         <TouchableOpacity onPress={this.props.onCancel}>
-                            <Text style={styles.button}>
-                                {this.props.t('Cancelar')}
-                                </Text>
+                            <Text style={styles.button}>Cancelar</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={this.save}>
-                            <Text style={styles.button}>
-                                {this.props.t('Salvar')}
-                            </Text>
+                            <Text style={styles.button}>Salvar</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
                 <TouchableWithoutFeedback
                     onPress={this.props.onCancel}>
-                    <View style={styles.background}>
-
-                    </View>
+                    <View style={styles.background}></View>
                 </TouchableWithoutFeedback>
             </Modal>
         )
@@ -106,33 +103,32 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.7)'
     },
     container: {
-        backgroundColor: '#FFF',
+        backgroundColor: '#FFF'
     },
     header: {
         fontFamily: commonStyles.fontFamily,
         backgroundColor: commonStyles.colors.today,
-        color: commonStyles.colors.secundary,
+        color: commonStyles.colors.secondary,
         textAlign: 'center',
         padding: 15,
-        fontSize: 18,
+        fontSize: 18
     },
     input: {
         fontFamily: commonStyles.fontFamily,
         height: 40,
         margin: 15,
         backgroundColor: '#FFF',
-        borderWidth: 2,
+        borderWidth: 1,
         borderColor: '#E3E3E3',
         borderRadius: 6
     },
     buttons: {
         flexDirection: 'row',
-        justifyContent: 'flex-end',
-
+        justifyContent: 'flex-end'
     },
     button: {
         margin: 20,
-        marginRight: 3,
+        marginRight: 30,
         color: commonStyles.colors.today
     },
     date: {
@@ -141,5 +137,3 @@ const styles = StyleSheet.create({
         marginLeft: 15
     }
 })
-
-export default withTranslation()(AddTask);
