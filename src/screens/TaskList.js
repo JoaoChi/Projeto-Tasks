@@ -12,6 +12,7 @@ import {
 
 import AsyncStorage from "@react-native-community/async-storage"
 import Icon from 'react-native-vector-icons/FontAwesome'
+<<<<<<< HEAD
 import axios from 'axios'
 import moment from 'moment'
 import 'moment/locale/pt-br'
@@ -25,6 +26,14 @@ import { server, showError } from '../common'
 import commonStyles from '../commonStyles'
 import Task from '../components/Task'
 import AddTask from './AddTask'
+=======
+import AddTask from "./AddTask";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { withTranslation } from "react-i18next";
+import "../utils/i18n";
+import axios from "axios";
+import { server, showError } from "../common";
+>>>>>>> 1233c11d777dd79c129a4a4e1df85813d081664e
 
 const initialState = {
     showDoneTasks: true,
@@ -40,6 +49,7 @@ export default class TaskList extends Component {
 
     componentDidMount = async () => {
         const stateString = await AsyncStorage.getItem('tasksState')
+<<<<<<< HEAD
         const savedState = JSON.parse(stateString) || initialState
         this.setState({
             showDoneTasks: savedState.showDoneTasks
@@ -58,10 +68,28 @@ export default class TaskList extends Component {
         } catch(e) {
             showError(e)
         }
+=======
+        const state = JSON.parse(stateString) || initialState
+        this.setState({
+            showDoneTasks: state.showDoneTasks
+        }, this.filterTasks)
+
+        this.loadTasks()
+>>>>>>> 1233c11d777dd79c129a4a4e1df85813d081664e
     }
 
     toggleFilter = () => {
         this.setState({ showDoneTasks: !this.state.showDoneTasks }, this.filterTasks)
+    }
+
+    loadTasks = async () => {
+        try{
+            const maxDate = moment().format('YYYY-MM-DD 23:59:59')
+            const res = axios.get(`${server}/tasks?date=${maxDate}`)
+            this.setState({ tasks: res.data }, this.filterTasks)
+        } catch(e) {
+            showError(e)
+        }
     }
 
     filterTasks = () => {
@@ -74,21 +102,33 @@ export default class TaskList extends Component {
         }
 
         this.setState({ visibleTasks })
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1233c11d777dd79c129a4a4e1df85813d081664e
         AsyncStorage.setItem('tasksState', JSON.stringify({
             showDoneTasks: this.state.showDoneTasks
         }))
     }
 
     toggleTask = async taskId => {
+<<<<<<< HEAD
         try {
             await axios.put(`${server}/tasks/${taskId}/toggle`)
             this.loadTasks()
         } catch(e) {
+=======
+        try{
+            await axios.put(`${server}/tasks/${taskId}/toggle`)
+            this.loadTasks()
+        }catch(e) {
+>>>>>>> 1233c11d777dd79c129a4a4e1df85813d081664e
             showError(e)
         }
     }
 
     addTask = async newTask => {
+<<<<<<< HEAD
         if(!newTask.desc || !newTask.desc.trim()) {
             Alert.alert('Dados Inválidos', 'Descrição não informada!')
             return 
@@ -108,10 +148,33 @@ export default class TaskList extends Component {
 
     deleteTask = async taskId => {
         try {
+=======
+        if (!newTask.desc || !newTask.desc.trim()) {
+            Alert.alert(this.props.t('Dados Inválidos!'), this.props.t('Descrição não informada!'))
+            return
+        }
+
+        try{
+            await axios.post(`${server}/tasks`,{
+                desc: newTask.desc,
+                estimateAt: newTask.Date                
+            })
+            this.setState({ showAddTask: false }, this.loadTasks)
+
+        } catch(e) {
+            showError(e)
+        }
+
+    }
+
+    deleteTask = async taskId => {
+        try{
+>>>>>>> 1233c11d777dd79c129a4a4e1df85813d081664e
             await axios.delete(`${server}/tasks/${taskId}`)
             this.loadTasks()
         } catch(e) {
             showError(e)
+<<<<<<< HEAD
         }
     }
 
@@ -131,6 +194,9 @@ export default class TaskList extends Component {
             case 7: return commonStyles.colors.week
             default: return commonStyles.colors.month
         }
+=======
+        } 
+>>>>>>> 1233c11d777dd79c129a4a4e1df85813d081664e
     }
 
     render() {
